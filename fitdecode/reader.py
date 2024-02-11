@@ -932,10 +932,15 @@ class FitReader:
     def _add_dev_field_description_impl(
             self, dev_data_index, field_def_num, base_type=types.BASE_TYPE_BYTE,
             name=None, units=None, native_field_num=None):
-        self._local_dev_types[dev_data_index]['fields'][field_def_num] = \
-            types.DevField(
-                dev_data_index, name, field_def_num, base_type, units,
-                native_field_num)
+        # NOTE: Skip since `fit2gpx` does not handle this.
+        try:
+            self._local_dev_types[dev_data_index]['fields'][field_def_num] = \
+                types.DevField(
+                    dev_data_index, name, field_def_num, base_type, units,
+                    native_field_num)
+        except KeyError:
+            msg = f"Failed to add field {field_def_num}"
+            warnings.warn(msg)
 
     def _get_dev_type(
             self, local_mesg_num, global_mesg_num, dev_data_index,
